@@ -1,0 +1,25 @@
+/*pagination default style*/
+
+.jgrid-pagination-container{
+    background-color: aliceblue;
+    padding: 0;
+    margin: 0;
+}
+.jgrid-pagination{
+    list-style: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0;
+    margin: 0;
+}
+.jgrid-pagination-item{
+    padding: 5px;
+}
+.jgird-pagination-item-link{
+
+}
+.pagination-link-active{
+    text-decoration: none;
+    color: silver;
+}

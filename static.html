@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link href="./css/jgrid.css" rel="stylesheet">
+    <link href="./css/site.css" rel="stylesheet">
+    <title>JGrid Demo</title>
+</head>
+
+<body>
+
+    <h1 class="text-center">jgrid example</h1>
+
+
+    <div class="container">
+
+        <h1>jgird static table</h1>
+        <table id="tbl_sale" class="table">
+            <tr>
+                <th>No.</th>
+                <th>Name</th>
+                <th>DOB</th>
+                <th>Email</th>
+                <th>City</th>
+                <th></th>
+            </tr>
+            <tr>
+                <th></th>
+                <th>
+                    <input id="txt_name" type="text" class="form-control" />
+                </th>
+                <th>
+                    <input id="txt_dob" type="date" class="form-control" />
+                </th>
+                <th>
+                    <input id="txt_email" type="email" class="form-control" />
+                </th>
+                <th>
+                    <select name="" class="form-control" id="ddl_city">
+                        <option value="0">--select one--</option>
+                        <option value="Yangon">Yangon</option>
+                        <option value="Mandalay">Mandalay</option>
+                    </select>
+                </th>
+                <th>
+                    <button id="btn_add" class="btn btn-primary">Add</button>
+                </th>
+            </tr>
+        </table>
+        <!-- <div class="jgrid-pagination-container">
+            <ul class="jgrid-pagination">
+                <li class="jgrid-pagination-item">
+                    <a class="jgird-pagination-item-link" href="">1</a>
+                </li>
+                <li class="jgrid-pagination-item">
+                    <a class="jgird-pagination-item-link" href="">2</a>
+                </li>
+            </ul>
+        </div> -->
+        <hr>
+        <h1>jgrid dynamic table</h1>
+        <table id="jgrid" class="table"></table>
+        <hr>
+        <input type="submit" class="btn btn-primary" id="btn_submit" value="Submit">
+        <p id="result"></p>
+    </div>
+
+    <script src="./js/jgrid.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"
+        integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"
+        integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF"
+        crossorigin="anonymous"></script>
+
+
+    <script type="application/javascript">
+
+        let items = [];
+        // let items = [
+        //         { id: 1, name: 'name 001', dateofbirth: '2022-05-14', email: '001@gmail.com', city: 'Yangon' },
+        //         { id: 2, name: 'name 002', dateofbirth: '2022-05-14', email: '002@gmail.com', city: 'Mandalay' },
+        //         { id: 3, name: 'name 003', dateofbirth: '2022-05-14', email: '003@gmail.com', city: 'Yangon' },
+        //         { id: 4, name: 'name 004', dateofbirth: '2022-05-14', email: '004@gmail.com', city: 'Mandalay' },
+        //         { id: 5, name: 'name 005', dateofbirth: '2022-05-14', email: '005@gmail.com', city: 'Yangon' },
+        //         { id: 6, name: 'name 006', dateofbirth: '2022-05-14', email: '006@gmail.com', city: 'Mandalay' },
+        //         { id: 7, name: 'name 007', dateofbirth: '2022-05-14', email: '007@gmail.com', city: 'Yangon' },
+        //         { id: 8, name: 'name 008', dateofbirth: '2022-05-14', email: '008@gmail.com', city: 'Mandalay' },
+        //         { id: 9, name: 'name 009', dateofbirth: '2022-05-14', email: '008@gmail.com', city: 'Yangon' },
+        //         { id: 10, name: 'name 010', dateofbirth: '2022-05-14', email: '009@gmail.com', city: 'Mandalay' },
+        //         { id:11, name: 'name 011', dateofbirth: '2022-05-14', email: '010@gmail.com', city: 'Yangon' },
+        //         { id: 12, name: 'name 012', dateofbirth: '2022-05-14', email: '011@gmail.com', city: 'Mandalay' },
+        //         { id: 13, name: 'name 013', dateofbirth: '2022-05-14', email: '012@gmail.com', city: 'Yangon' },
+        //         { id: 14, name: 'name 014', dateofbirth: '2022-05-14', email: '013@gmail.com', city: 'Mandalay' },
+        //         { id: 15, name: 'name 015', dateofbirth: '2022-05-14', email: '014@gmail.com', city: 'Yangon' },
+        //         { id: 16, name: 'name 016', dateofbirth: '2022-05-14', email: '015@gmail.com', city: 'Mandalay' },
+        //         { id: 17, name: 'name 017', dateofbirth: '2022-05-14', email: '016@gmail.com', city: 'Yangon' },
+        //         { id: 18, name: 'name 018', dateofbirth: '2022-05-14', email: '017@gmail.com', city: 'Mandalay' },
+        //         { id: 19, name: 'name 019', dateofbirth: '2022-05-14', email: '018@gmail.com', city: 'Yangon' },
+        //         { id: 20, name: 'name 020', dateofbirth: '2022-05-14', email: '019@gmail.com', city: 'Mandalay' }
+        //     ];
+
+
+        let txt_name = document.querySelector("#txt_name");
+        let txt_dob = document.querySelector("#txt_dob");
+        let txt_email = document.querySelector("#txt_email");
+        let ddl_city = document.querySelector("#ddl_city");
+        let btn_add = document.querySelector("#btn_add");
+        let tbl_sale = document.querySelector("#tbl_sale");
+
+        let total_items_count = items.length;
+        let page_size = 5;
+        let number_of_pages;
+        let current_page_number = 1;
+
+        let btn_submit = document.querySelector("#btn_submit");
+
+        btn_submit.addEventListener('click', function () {
+            console.log(jgrid);
+            document.querySelector('#result').innerHTML = JSON.stringify(jgrid);
+        });
+        
+        document.addEventListener('DOMContentLoaded', function () {
+
+            let jgrid = document.querySelector('#jgrid').jgrid(
+                {
+                    item_types:
+                        [
+                            { name: 'name', header_text: 'Name', data_type: 'text', input_class_name: 'form-control' },
+                            { name: 'date_of_birth', header_text: 'DOB', data_type: 'date', input_class_name: 'form-control' },
+                            { name: 'email', header_text: 'Email', data_type: 'email', input_class_name: 'form-control' },
+                            { name: 'city', header_text: 'City', data_type: 'text', input_class_name: 'form-control', is_show: false }
+                        ],
+                    is_pagination: true,
+                    page_size: 3,
+                }
+            );
+
+        });
+
+
+        btn_add.addEventListener('click', function () {
+
+            let id = items.length == 0 ? 1 : items.length + 1;
+
+            let item = {
+                id: id,
+                name: txt_name.value,
+                dateofbirth: txt_dob.value,
+                email: txt_email.value,
+                city: ddl_city.value
+            };
+
+            items.push(item);
+
+            clean_table();
+
+            generated_table();
+        });
+
+        function clean_table() {
+
+            let rowCount = tbl_sale.rows.length - 1;
+            while (rowCount >= 2) {
+                tbl_sale.deleteRow(rowCount);
+                rowCount--;
+            }
+        }
+        function edit_btn_onclick(table_edit_index, item_edit_index) {
+
+            let btn_edit = document.querySelector(`#btn_edit_${item_edit_index}`);
+            let btn_delete = document.querySelector(`#btn_delete_${item_edit_index}`);
+
+            let row = tbl_sale.rows[table_edit_index];
+
+            let clone_txt_name = txt_name.cloneNode(true);
+            let clone_txt_dob = txt_dob.cloneNode(true);
+            let clone_txt_email = txt_email.cloneNode(true);
+            let clone_ddl_city = ddl_city.cloneNode(true);
+
+            let edit_item = items[item_edit_index];
+
+            if (btn_edit.innerHTML === "Edit") {
+
+                btn_edit.innerHTML = 'Update';
+                btn_delete.innerHTML = "Cancel";
+
+                clone_txt_name.value = edit_item.name;
+                clone_txt_dob.value = edit_item.dateofbirth;
+                clone_txt_email.value = edit_item.email;
+                clone_ddl_city.value = edit_item.city;
+
+                clone_txt_name.id = 'txt_name_' + item_edit_index;
+                clone_txt_dob.id = 'txt_dob_' + item_edit_index;
+                clone_txt_email.id = 'txt_email_' + item_edit_index;
+                clone_ddl_city.id = 'ddl_city_' + item_edit_index;
+
+                row.cells[1].innerHTML = '';
+                row.cells[2].innerHTML = '';
+                row.cells[3].innerHTML = '';
+                row.cells[4].innerHTML = '';
+
+                row.cells[1].appendChild(clone_txt_name);
+                row.cells[2].appendChild(clone_txt_dob);
+                row.cells[3].appendChild(clone_txt_email);
+                row.cells[4].appendChild(clone_ddl_city);
+
+            } else if (btn_edit.innerHTML === "Update") {
+
+                edit_item.name = document.querySelector(`#txt_name_${item_edit_index}`).value;
+                edit_item.dateofbirth = document.querySelector(`#txt_dob_${item_edit_index}`).value;
+                edit_item.email = document.querySelector(`#txt_email_${item_edit_index}`).value;
+                edit_item.city = document.querySelector(`#ddl_city_${item_edit_index}`).value;
+
+                btn_edit.innerHTML = "Edit";
+                btn_delete.innerHTML = "Delete";
+
+                clean_table();
+
+                generated_table();
+            }
+
+        }
+        function delete_btn_onclick(table_delete_index, item_delete_index) {
+
+            let btn_edit = document.querySelector(`#btn_edit_${item_delete_index}`);
+            let btn_delete = document.querySelector(`#btn_delete_${item_delete_index}`);
+
+            if (btn_delete.innerHTML == "Delete") {
+                items.splice(item_delete_index, 1);
+                clean_table();
+                generated_table();
+            } else if (btn_delete.innerHTML == "Cancel") {
+                clean_table();
+                generated_table();
+            }
+        }
+        function generated_table() {
+
+            total_items_count = items.length;
+            number_of_pages = Math.ceil(total_items_count / page_size);
+
+            let _items = [];
+
+            if (items.length > page_size) {
+
+                _items = items.slice((current_page_number - 1) * page_size, current_page_number * page_size);
+            } else {
+                _items = items;
+            }
+
+            clean_table();
+
+            _items.forEach(function (item, index) {
+
+                let row = tbl_sale.insertRow(index + 2);
+                let row_index = parseInt(index) + 2;
+                row.insertCell(0).innerHTML = item.id;
+                row.insertCell(1).innerHTML = item.name;
+                row.insertCell(2).innerHTML = item.dateofbirth;
+                row.insertCell(3).innerHTML = item.email;
+                row.insertCell(4).innerHTML = item.city;
+
+                let edit_cell = row.insertCell(5);
+
+                let btn_edit = document.createElement('button');
+                btn_edit.className = 'btn btn-secondary me-2 btn_edit';
+                btn_edit.innerHTML = 'Edit';
+                btn_edit.id = `btn_edit_${index}`;
+
+                btn_edit.setAttribute('onclick', 'edit_btn_onclick(' + row_index + ',' + index + ')');
+
+                let btn_delete = document.createElement('button');
+                btn_delete.className = 'btn btn-danger';
+                btn_delete.innerHTML = 'Delete';
+                btn_delete.id = `btn_delete_${index}`;
+
+                btn_delete.setAttribute('onclick', 'delete_btn_onclick(' + row_index + ',' + index + ')');
+
+                edit_cell.appendChild(btn_edit);
+                edit_cell.appendChild(btn_delete);
+
+            });
+
+            create_pagination_elements();
+
+        }
+        function create_pagination_elements() {
+
+            let _container = document.querySelector('.jgrid-pagination-container');
+
+            if (_container != null && _container != 'undefined') {
+                while (_container.firstChild) {
+                    _container.removeChild(_container.firstChild);
+                }
+            }
+
+            if (items.length > page_size) {
+                let jgrid_pagination_container = document.createElement('div');
+                jgrid_pagination_container.className = 'jgrid-pagination-container';
+
+                let jgrid_pagination = document.createElement('div');
+                jgrid_pagination.className = 'jgrid-pagination';
+
+                for (let i = 1; number_of_pages >= i; i++) {
+
+                    let jgrid_pagination_item = document.createElement('li');
+                    jgrid_pagination_item.className = 'jgrid-pagination-item';
+
+                    let jgird_pagination_item_link = document.createElement('a');
+                    jgird_pagination_item_link.className = 'jgird-pagination-item-link';
+                    jgird_pagination_item_link.innerHTML = i;
+                    jgird_pagination_item_link.href = '';
+
+                    jgird_pagination_item_link.onclick = function (e) {
+
+                        e.preventDefault();
+
+                        current_page_number = i;
+                        generated_table();
+                    }
+
+                    if (current_page_number == i) {
+                        jgird_pagination_item_link.className += " " + 'pagination-link-active';
+                    }
+                    jgrid_pagination_item.appendChild(jgird_pagination_item_link);
+
+                    jgrid_pagination.appendChild(jgrid_pagination_item);
+
+                }
+                jgrid_pagination_container.appendChild(jgrid_pagination);
+                tbl_sale.after(jgrid_pagination_container);
+            }
+        }
+    </script>
+</body>
+
+</html>
