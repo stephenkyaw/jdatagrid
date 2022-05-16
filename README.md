@@ -8,7 +8,7 @@ javascript data grid entry lib
  - searching :x:
  - pagination :heavy_check_mark:
  
-:point_right: :link: [Demo Example](https://kyawmyoaung-dev.github.io/jgrid/) :grin:
+:point_right: :link: [Demo Example](https://kyawmyoaung-dev.github.io/jdatagrid/) :grin:
  
 [![pages-build-deployment](https://github.com/kyawmyoaung-dev/jgrid/actions/workflows/pages/pages-build-deployment/badge.svg?branch=main)](https://github.com/kyawmyoaung-dev/jgrid/actions/workflows/pages/pages-build-deployment)
 
