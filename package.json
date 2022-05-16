@@ -1,0 +1,22 @@
+{
+  "name": "jdatagrid",
+  "version": "1.0.0",
+  "description": "javascript data grid entry library",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kyawmyoaung-dev/jdatagrid.git"
+  },
+  "keywords": [
+    "jdatagrid"
+  ],
+  "author": "kyaw myo aung",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/kyawmyoaung-dev/jdatagrid/issues"
+  },
+  "homepage": "https://github.com/kyawmyoaung-dev/jdatagrid#readme"
+}
