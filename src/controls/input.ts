@@ -1,0 +1,1 @@
+export const input_text = () : void => console.log('this is input text');
