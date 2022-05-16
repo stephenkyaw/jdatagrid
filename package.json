@@ -18,5 +18,8 @@
   "bugs": {
     "url": "https://github.com/kyawmyoaung-dev/jdatagrid/issues"
   },
-  "homepage": "https://github.com/kyawmyoaung-dev/jdatagrid#readme"
+  "homepage": "https://github.com/kyawmyoaung-dev/jdatagrid#readme",
+  "devDependencies": {
+    "typescript": "^4.6.4"
+  }
 }
