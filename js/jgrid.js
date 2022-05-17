@@ -1,4 +1,21 @@
 "use strict";
+/*
+    options : {
+        table : 'table instance',
+        items : [
+            {
+                name : 'object name',
+                header_text : 'show in table header text field',
+                data_type : 'string' (string,number,date. default is string),
+                input_type : 'control type' (text,number,date,date-time,select,checkbox,radio) ,
+                attributes : [ { name : 'class', value : 'form-control' } ] (add attribut),
+                data : [{ text : 'city', value : 'city_001' }] (for data bind eg. select control)
+            },
+        is_pagination : ture (or) false (default is true),
+        page_size : number (default is 5)
+        ]
+    }
+*/
 function jgrid(options) {
 
     let default_options = { data: [], items: [], is_pagination: true, page_size: 5, current_page: 1 };
@@ -47,11 +64,76 @@ function jgrid(options) {
         }
         return _items;
     }
+    const set_input_value = (input, value) => {
+        switch (input.type) {
+            case 'color':
+            case 'date':
+            case 'datetime-local':
+            case 'month':
+            case 'number':
+            case 'password':
+            case 'search':
+            case 'tel':
+            case 'text':
+            case 'time':
+            case 'url':
+            case 'week':
+            //case 'file':
+            //case 'hidden':
+            //case 'image':
+            case 'range':
+            case 'url':
+                input.value = value;
+                break;
+            case 'checkbox':
+            case 'radio':
+                input.checked = value;
+                break;
+            default:
+                value = '';
+                break;
+        }
+
+    }
+    const get_input_value = (input) => {
+        let value;
+        switch (input.type) {
+            case 'color':
+            case 'date':
+            case 'datetime-local':
+            case 'month':
+            case 'number':
+            case 'password':
+            case 'search':
+            case 'tel':
+            case 'text':
+            case 'time':
+            case 'url':
+            case 'week':
+            case 'select-one':
+            //case 'file':
+            //case 'hidden':
+            //case 'image':
+            case 'range':
+            case 'url':
+                value = input.value;
+                break;
+            case 'checkbox':
+            case 'radio':
+                value = input.checked;
+                break;
+            default:
+                value = '';
+                break;
+        }
+
+        return value;
+    }
     function add_button_click_event() {
         let entity_item = defined_item();
         items.forEach(function (item) {
             let input = table_instance.querySelector(`#${item.name}`);
-            entity_item[item.name] = input.value;
+            entity_item[item.name] = get_input_value(input);
         });
         data.push(entity_item);
         render_table_rows();
@@ -68,14 +150,15 @@ function jgrid(options) {
                 let clone_controls = table_instance.querySelector(`#${item_type.name}`).cloneNode(true);
                 clone_controls.id = `${item_type.name}_${auto_increment_id}`;
                 clone_controls.name = `${item_type.name}_${auto_increment_id}`;
-                clone_controls.value = edit_item[item_type.name];
+                set_input_value(clone_controls, edit_item[item_type.name]);
                 row.cells[_index + 1].innerHTML = '';
                 row.cells[_index + 1].appendChild(clone_controls);
             });
         }
         else if (edit_button.innerHTML == 'Update') {
             items.forEach(function (item_type, _index) {
-                edit_item[item_type.name] = table_instance.querySelector(`#${item_type.name}_${auto_increment_id}`).value;
+                let input = table_instance.querySelector(`#${item_type.name}_${auto_increment_id}`);
+                edit_item[item_type.name] = get_input_value(input);
             });
             edit_button.innerHTML = "Edit";
             delete_button.innerHTML = "Delete";
@@ -225,20 +308,26 @@ function jgrid(options) {
     function created_controls(item) {
         let input;
         switch (item.input_type) {
-            case 'text':
-                input = document.createElement('input');
-                input.type = 'text';
-                input.className = item.input_class_name;
-                break;
+            case 'color':
             case 'date':
-                input = document.createElement('input');
-                input.type = 'date';
-                input.className = item.input_class_name;
-                break;
-            case 'email':
-                input = document.createElement('input');
-                input.type = 'email';
-                input.className = item.input_class_name;
+            case 'datetime-local':
+            case 'month':
+            case 'number':
+            case 'password':
+            case 'search':
+            case 'tel':
+            case 'text':
+            case 'time':
+            case 'url':
+            case 'week':
+            case 'checkbox':
+            case 'radio':
+            case 'file':
+            case 'hidden':
+            case 'image':
+            case 'range':
+            case 'url':
+                input = created_control_input(item);
                 break;
             case 'select':
                 input = created_control_select(item);
@@ -246,28 +335,36 @@ function jgrid(options) {
             default:
                 input = document.createElement('input');
                 input.type = 'text';
-                input.className = item.input_class_name;
         }
         input.id = item.name;
         input.name = item.name;
+        created_attributes(input, item.attributes);
         return input;
     }
-    function created_control_select(item){
+    const created_control_input = (item) => {
+        let input = document.createElement('input');
+        input.type = item.input_type;
+        return input;
+    }
+    function created_control_select(item) {
         let select = document.createElement('select');
-        if(item.data.length > 0 ){
-            item.data.forEach(function(data){
+        if (typeof (item.data) != "undefined" && item.data.length > 0 && item.data != null) {
+            item.data.forEach(function (data) {
                 let option = document.createElement('option');
                 option.value = data.value;
                 option.innerHTML = data.text;
-    
                 select.appendChild(option);
             });
-            
         }
-        select.className = item.input_class_name;
         return select;
     }
-
+    const created_attributes = (input, attributes) => {
+        if (typeof (attributes) != 'undefined' && attributes != null && attributes.length > 0) {
+            attributes.forEach(function (attribute) {
+                input.setAttribute(attribute.name, attribute.value);
+            });
+        }
+    }
     this.get_log = function () {
         console.log('data log.....');
         console.log(data);

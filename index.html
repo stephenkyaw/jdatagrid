@@ -70,9 +70,9 @@
                     table: '#jgrid',
                     items:
                         [
-                            { name: 'name', data_type: 'string', input_type: 'text', header_text: 'name', input_class_name: 'form-control' },
-                            { name: 'date_of_birth', data_type: 'string', input_type: 'date', header_text: 'date_of_birth', input_class_name: 'form-control' },
-                            { name: 'email', data_type: 'string', input_type: 'email', header_text: 'email', input_class_name: 'form-control' },
+                            { name: 'name', data_type: 'string', input_type: 'text', header_text: 'name',  attributes : [{  name : 'class', value : 'form-control' },{ name : 'data-name', value :'data-value' }] },
+                            { name: 'date_of_birth', data_type: 'string', input_type: 'date', header_text: 'date_of_birth',attributes : [{  name : 'class', value : 'form-control' }]},
+                            { name: 'email', data_type: 'string', input_type: 'checkbox', header_text: 'email',attributes : [{  name : 'class', value : '' }]  },
                             { name: 'city', data_type: 'string', input_type: 'select', header_text: 'city', data: [{ text: 'Yangon', value: 'YGN' }, { text: 'Mandalay', value: 'MDY' }], input_class_name: 'form-control' }
                         ],
                     is_pagination: true,
