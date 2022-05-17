@@ -89,6 +89,9 @@ function jgrid(options) {
             case 'radio':
                 input.checked = value;
                 break;
+            case 'select-one':
+                input.value = value.value;
+                break;
             default:
                 value = '';
                 break;
@@ -110,7 +113,6 @@ function jgrid(options) {
             case 'time':
             case 'url':
             case 'week':
-            case 'select-one':
             //case 'file':
             //case 'hidden':
             //case 'image':
@@ -121,6 +123,12 @@ function jgrid(options) {
             case 'checkbox':
             case 'radio':
                 value = input.checked;
+                break;
+            case 'select-one':
+                value = {
+                    text: input.options[input.selectedIndex].text,
+                    value: input.value
+                };
                 break;
             default:
                 value = '';
@@ -222,7 +230,12 @@ function jgrid(options) {
                 let row = table_instance.insertRow(index + 2);
                 row.insertCell(0).innerHTML = item.auto_increment_id;
                 items.forEach(function (item_type, _index) {
-                    row.insertCell(_index + 1).innerHTML = item[item_type.name];
+                    if (typeof (item_type.data) != 'undefined' && item_type.data != null) {
+                        row.insertCell(_index + 1).innerHTML = item[item_type.name].text;
+                    } else {
+                        row.insertCell(_index + 1).innerHTML = item[item_type.name];
+                    }
+
                 });
                 let edit_delete_cell = row.insertCell(items.length + 1);
                 let table_row_index = parseInt(index) + 2;
