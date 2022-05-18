@@ -65,7 +65,7 @@ function jgrid(options) {
         return _items;
     }
     const set_input_value = (input, value) => {
-        switch (input.type) {
+        switch (input.getAttribute('type')) {
             case 'color':
             case 'date':
             case 'datetime-local':
@@ -87,10 +87,21 @@ function jgrid(options) {
                 break;
             case 'checkbox':
             case 'radio':
-                input.checked = value;
+                if (typeof (value) == 'boolean') {
+                    input.checked = value;
+                } else if (typeof (value) == 'object') {
+                    if (value.length > 0) {
+                        value.forEach(function (item) {
+                            let _check_radio_input = input.querySelector(`#${item.value}`);
+                            if (typeof (_check_radio_input) != 'undefined' && _check_radio_input != null) {
+                                _check_radio_input.checked = true;
+                            }
+                        });
+                    }
+                }
                 break;
             case 'select-one':
-                input.value = value.value;
+                input.value = value[0].value;//select is only one value
                 break;
             default:
                 value = '';
@@ -98,9 +109,9 @@ function jgrid(options) {
         }
 
     }
-    const get_input_value = (input) => {
+    const get_input_value = (input, item) => {
         let value;
-        switch (input.type) {
+        switch (input.getAttribute('type')) {
             case 'color':
             case 'date':
             case 'datetime-local':
@@ -122,13 +133,30 @@ function jgrid(options) {
                 break;
             case 'checkbox':
             case 'radio':
-                value = input.checked;
+                if (typeof (item.data) != 'undefined' && item.data.length > 0 && item.data != null) {
+
+                    let checkbox_list = input.querySelectorAll(`input[type="${item.input_type}"]`);
+                    value = [];
+                    if (typeof (checkbox_list) != 'undefined' && checkbox_list != null && checkbox_list.length > 0) {
+                        checkbox_list.forEach(function (checkbox) {
+                            if (checkbox.checked) {
+                                let _data = {};
+                                _data.text = checkbox.getAttribute('data-text');
+                                _data.value = checkbox.value;
+                                value.push(_data);
+                            }
+                        });
+                    }
+                } else {
+                    value = input.checked;
+                }
                 break;
-            case 'select-one':
-                value = {
-                    text: input.options[input.selectedIndex].text,
-                    value: input.value
-                };
+            case 'select':
+                value = [];
+                let _data = {};
+                _data.text = input.options[input.selectedIndex].text;
+                _data.value = input.value;
+                value.push(_data);
                 break;
             default:
                 value = '';
@@ -137,14 +165,55 @@ function jgrid(options) {
 
         return value;
     }
+    const clean_input_value = () => {
+        if (typeof (items) != 'undefined' && items.length > 0 && items != null) {
+            items.forEach(function (item) {
+                let input = table_instance.querySelector(`#${item.name}`);
+                switch (input.getAttribute('type')) {
+                    case 'color':
+                    case 'date':
+                    case 'datetime-local':
+                    case 'month':
+                    case 'number':
+                    case 'password':
+                    case 'search':
+                    case 'tel':
+                    case 'text':
+                    case 'time':
+                    case 'url':
+                    case 'week':
+                    case 'range':
+                    case 'url':
+                        input.value = '';
+                        break;
+                    case 'checkbox':
+                    case 'radio':
+                        if (typeof (item.data) != 'undefined' && item.data.length > 0 && item.data != null) {
+
+                            let checkbox_list = input.querySelectorAll(`input[type="${item.input_type}"]`);
+                            checkbox_list.forEach(function (checkbox) {
+                                checkbox.checked = false;
+                            });
+                        } else {
+                            input.checked = false;
+                        }
+                        break;
+                    case 'select':
+                        //input.value = '';
+                        break;
+                }
+            });
+        }
+    }
     function add_button_click_event() {
         let entity_item = defined_item();
         items.forEach(function (item) {
             let input = table_instance.querySelector(`#${item.name}`);
-            entity_item[item.name] = get_input_value(input);
+            entity_item[item.name] = get_input_value(input, item);
         });
         data.push(entity_item);
         render_table_rows();
+        clean_input_value();
     }
     function edit_button_click_event(table_edit_index, auto_increment_id) {
         let edit_button = table_instance.querySelector(`#item_edit_button_${auto_increment_id}`);
@@ -166,7 +235,7 @@ function jgrid(options) {
         else if (edit_button.innerHTML == 'Update') {
             items.forEach(function (item_type, _index) {
                 let input = table_instance.querySelector(`#${item_type.name}_${auto_increment_id}`);
-                edit_item[item_type.name] = get_input_value(input);
+                edit_item[item_type.name] = get_input_value(input, item_type);
             });
             edit_button.innerHTML = "Edit";
             delete_button.innerHTML = "Delete";
@@ -221,6 +290,30 @@ function jgrid(options) {
             item.auto_increment_id = index + 1;
         });
     }
+    const get_table_rows_render_value = (item, item_type) => {
+        let value;
+
+        if (typeof (item_type.data) != 'undefined' && item_type.data != null) {
+            value = '';
+            if (typeof (item[item_type.name]) != 'undefined' && item[item_type.name].length > 0 && item[item_type.name] != null) {
+                item[item_type.name].forEach(function (_data) {
+                    value = value.concat(' ', _data.text);
+                });
+            }
+        } else if (typeof (item[item_type.name]) == 'boolean') {
+
+            if (item[item_type.name] == true) {
+                value = '&#9745;';
+            } else {
+                value = '';
+            }
+        }
+        else {
+            value = item[item_type.name];
+        }
+
+        return value;
+    }
     function render_table_rows() {
         clean_table_rows();
         serialize_auto_increment_id();
@@ -230,12 +323,7 @@ function jgrid(options) {
                 let row = table_instance.insertRow(index + 2);
                 row.insertCell(0).innerHTML = item.auto_increment_id;
                 items.forEach(function (item_type, _index) {
-                    if (typeof (item_type.data) != 'undefined' && item_type.data != null) {
-                        row.insertCell(_index + 1).innerHTML = item[item_type.name].text;
-                    } else {
-                        row.insertCell(_index + 1).innerHTML = item[item_type.name];
-                    }
-
+                    row.insertCell(_index + 1).innerHTML = get_table_rows_render_value(item, item_type);
                 });
                 let edit_delete_cell = row.insertCell(items.length + 1);
                 let table_row_index = parseInt(index) + 2;
@@ -333,8 +421,6 @@ function jgrid(options) {
             case 'time':
             case 'url':
             case 'week':
-            case 'checkbox':
-            case 'radio':
             case 'file':
             case 'hidden':
             case 'image':
@@ -345,19 +431,53 @@ function jgrid(options) {
             case 'select':
                 input = created_control_select(item);
                 break;
+            case 'checkbox':
+            case 'radio':
+                input = created_control_checkbox_radio(item);
+                break;
             default:
                 input = document.createElement('input');
                 input.type = 'text';
         }
-        input.id = item.name;
-        input.name = item.name;
         created_attributes(input, item.attributes);
         return input;
     }
     const created_control_input = (item) => {
         let input = document.createElement('input');
         input.type = item.input_type;
+        input.id = item.name;
+        input.name = item.name;
+        input.setAttribute('type', item.input_type);
         return input;
+    }
+    const created_control_checkbox_radio = (item) => {
+
+        if (typeof (item.data) != "undefined" && item.data.length > 0 && item.data != null) {
+            let div = document.createElement('div');
+            item.data.forEach(function (data) {
+                let input = document.createElement('input');
+                let label = document.createElement('label');
+                input.type = item.input_type;
+                input.value = data.value;
+                input.name = item.name;
+                input.id = data.value;
+                input.setAttribute('data-text', data.text);
+                label.innerHTML = data.text;
+                div.appendChild(input);
+                div.appendChild(label);
+            });
+            div.setAttribute('id', item.name);
+            div.setAttribute('name', item.name);
+            div.setAttribute('type', item.input_type);
+            return div;
+        } else {
+            let input = document.createElement('input');
+            input.type = item.input_type;
+            input.id = item.name;
+            input.name = item.name;
+            input.setAttribute('type', item.input_type);
+            return input;
+        }
     }
     function created_control_select(item) {
         let select = document.createElement('select');
@@ -369,6 +489,9 @@ function jgrid(options) {
                 select.appendChild(option);
             });
         }
+        select.id = item.name;
+        select.name = item.name;
+        select.setAttribute('type', 'select');
         return select;
     }
     const created_attributes = (input, attributes) => {

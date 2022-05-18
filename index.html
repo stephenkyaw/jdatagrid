@@ -14,82 +14,46 @@
 
 <body>
     <div class="container">
-        <h1>jgrid example</h1>
-        <h1>table 1</h1>
-        <table id="jgrid" class="table"></table>
+        <h1 class="text-center">jdatagrid example</h1>
         <hr>
+        <table id="jgrid" class="table table-bordered"></table>
         <blockquote>
             <pre>
-                <code id="result_1"></code>
+                <code id="result"></code>
             </pre>
         </blockquote>
-        <hr>
         <input type="submit" class="btn btn-primary" id="btn_submit" value="Submit">
-        <hr>
-        <h1>table 2</h1>
-        <table id="jgrid_2" class="table"></table>
-        <hr>
-        <blockquote>
-            <pre>
-                <code id="result_2"></code>
-            </pre>
-        </blockquote>
-        <hr>
-        <input type="submit" class="btn btn-primary" id="btn_submit_2" value="Submit">
-        <hr>
     </div>
 
     <script src="./js/jgrid.js"></script>
     <script type="application/javascript">
 
-        let jgrid_1, jgrid_2;
-
+        let jdatagrid;
         let btn_submit = document.querySelector("#btn_submit");
-        let btn_submit_2 = document.querySelector("#btn_submit_2");
+        let result = document.querySelector('#result');
 
-        btn_submit.addEventListener('click', function () {
-
-            let data = jgrid_1.get_data();
-
-            document.querySelector('#result_1').innerHTML = JSON.stringify(data);
-            console.log('jgird table 1 data log');
-            console.log(data);
-        });
-        btn_submit_2.addEventListener('click', function () {
-
-            let data = jgrid_2.get_data();
-
-            document.querySelector('#result_2').innerHTML = JSON.stringify(data);
-            console.log('jgird table 2 data log');
-            console.log(data);
+        btn_submit.addEventListener('click', function () {            
+            result.innerHTML = '';
+            let data = jdatagrid.get_data();
+            result.innerHTML = JSON.stringify(data);
+            console.log('jdatagrid data log', data);
         });
 
         document.addEventListener('DOMContentLoaded', function () {
-            jgrid_1 = new jgrid(
+            jdatagrid = new jgrid(
                 {
                     table: '#jgrid',
                     items:
                         [
-                            { name: 'name', data_type: 'string', input_type: 'text', header_text: 'name',  attributes : [{  name : 'class', value : 'form-control' },{ name : 'data-name', value :'data-value' }] },
-                            { name: 'date_of_birth', data_type: 'string', input_type: 'date', header_text: 'date_of_birth',attributes : [{  name : 'class', value : 'form-control' }]},
-                            { name: 'email', data_type: 'string', input_type: 'checkbox', header_text: 'email',attributes : [{  name : 'class', value : '' }]  },
-                            { name: 'city', data_type: 'string', input_type: 'select', header_text: 'city', data: [{ text: 'Yangon', value: 'YGN' }, { text: 'Mandalay', value: 'MDY' }], input_class_name: 'form-control' }
+                            { name: 'name', input_type: 'text', header_text: 'Name', attributes: [{ name: 'class', value: 'form-control' }, { name: 'data-name', value: 'data-value' }] },
+                            { name: 'date_of_birth', input_type: 'date', header_text: 'Date of birth', attributes: [{ name: 'class', value: 'form-control' }] },
+                            { name: 'gender', input_type: 'radio', header_text: 'Gender', data: [{ text: 'Male', value: 'M' }, { text: 'Female', value: 'F' }] },
+                            { name: 'status', input_type: 'checkbox', header_text: 'Status' },
+                            { name: 'subjects', input_type: 'checkbox', header_text: 'Subjects', data: [{ text: 'Html', value: 'html' }, { text: 'CSS', value: 'css' }, { text: 'Javascript', value: 'javascript' }] },
+                            { name: 'class', input_type: 'select', header_text: 'Class', attributes: [{ name: 'class', value: 'form-control' }], data: [{ text: 'Class A', value: 'class_a' }, { text: 'Class B', value: 'class_b' }, { text: 'Class C', value: 'class_c' }] }
                         ],
                     is_pagination: true,
-                    page_size: 3
-                }
-            );
-            jgrid_2 = new jgrid(
-                {
-                    table: '#jgrid_2',
-                    items:
-                        [
-                            { name: 'student_name', data_type: 'string', input_type: 'text', header_text: 'student_name', input_class_name: 'form-control' },
-                            { name: 'course', data_type: 'string', input_type: 'text', header_text: 'course', input_class_name: 'form-control' },
-                            { name: 'class', data_type: 'string', input_type: 'text', header_text: 'class', input_class_name: 'form-control' },
-                            { name: 'subject', data_type: 'string', input_type: 'text', header_text: 'subject', input_class_name: 'form-control' }
-                        ],
-                    is_pagination: true
+                    page_size: 10
                 }
             );
         });

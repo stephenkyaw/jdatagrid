@@ -2,6 +2,7 @@ body {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    color: #6c757d;
 }
 .container{
     margin: 35px 10%;
