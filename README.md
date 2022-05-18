@@ -16,100 +16,113 @@ javascript data grid entry library
 
 **html**
 ```
-<table id="jgrid" class="table"></table>
+ <table id="jgrid" class="table table-bordered"></table>
 ```
  **javascript**
  ```
 document.addEventListener('DOMContentLoaded', function () {
-
-            let jgrid = document.querySelector('#jgrid').jgrid(
+            jdatagrid = new jgrid(
                 {
-                    item_types:
+                    table: '#jgrid',
+                    items:
                         [
-                            { name: 'name', header_text: 'Name', data_type: 'text', input_class_name: 'form-control' },
-                            { name: 'date_of_birth', header_text: 'DOB', data_type: 'date', input_class_name: 'form-control' },
-                            { name: 'email', header_text: 'Email', data_type: 'email', input_class_name: 'form-control' },
-                            { name: 'city', header_text: 'City', data_type: 'text', input_class_name: 'form-control', is_show: false }
+                            { name: 'name', input_type: 'text', header_text: 'Name', attributes: [{ name: 'class', value: 'form-control' }, { name: 'data-name', value: 'data-value' }] },
+                            { name: 'date_of_birth', input_type: 'date', header_text: 'Date of birth', attributes: [{ name: 'class', value: 'form-control' }] },
+                            { name: 'gender', input_type: 'radio', header_text: 'Gender', data: [{ text: 'Male', value: 'M' }, { text: 'Female', value: 'F' }] },
+                            { name: 'status', input_type: 'checkbox', header_text: 'Status' },
+                            { name: 'subjects', input_type: 'checkbox', header_text: 'Subjects', data: [{ text: 'Html', value: 'html' }, { text: 'CSS', value: 'css' }, { text: 'Javascript', value: 'javascript' }] },
+                            { name: 'class', input_type: 'select', header_text: 'Class', attributes: [{ name: 'class', value: 'form-control' }], data: [{ text: 'Class A', value: 'class_a' }, { text: 'Class B', value: 'class_b' }, { text: 'Class C', value: 'class_c' }] }
                         ],
-                    is_pagination: false,
-                    page_size: 3,
-                });
- });
+                    is_pagination: true,
+                    page_size: 10
+                }
+            );
+        });
  ```
- **check log**
+ **get data**
 ```
-  btn_submit.addEventListener('click', function () {
-            console.log(jgrid);
-});
+ btn_submit.addEventListener('click', function () {            
+            result.innerHTML = '';
+            let data = jdatagrid.get_data();
+            result.innerHTML = JSON.stringify(data);
+            console.log('jdatagrid data log', data);
+        });
 ```
 
- **jgrid object log**
+ **data object log**
 
 ```
-{
-    "item_types": [
-        {
-            "name": "name",
-            "header_text": "Name",
-            "data_type": "text",
-            "input_class_name": "form-control",
-            "is_show": true,
-            "is_sort": true,
-            "is_search": true
-        },
-        {
-            "name": "date_of_birth",
-            "header_text": "DOB",
-            "data_type": "date",
-            "input_class_name": "form-control",
-            "is_show": true,
-            "is_sort": true,
-            "is_search": true
-        },
-        {
-            "name": "email",
-            "header_text": "Email",
-            "data_type": "email",
-            "input_class_name": "form-control",
-            "is_show": true,
-            "is_sort": true,
-            "is_search": true
-        },
-        {
-            "name": "city",
-            "header_text": "City",
-            "data_type": "text",
-            "input_class_name": "form-control",
-            "is_show": false,
-            "is_sort": true,
-            "is_search": true
-        }
-    ],
-    "is_pagination": false,
-    "page_size": 3,
-    "table_instance": {},
-    "data": [
-        {
-            "name": "kma",
-            "date_of_birth": "2022-05-15",
-            "email": "kma@gmail.com",
-            "city": "yangon",
-            "auto_increment_id": 1
-        },
-        {
-            "name": "john",
-            "date_of_birth": "2022-05-16",
-            "email": "john@gmail.com",
-            "city": "mandalay",
-            "auto_increment_id": 2
-        },
-        {
-            "name": "may",
-            "date_of_birth": "2022-05-17",
-            "email": "may@gmail.com",
-            "city": "yangon",
-            "auto_increment_id": 3
-        }
-    ]
-}
+[{
+		"name": "John",
+		"date_of_birth": "1991-12-30",
+		"gender": [{
+			"text": "Male",
+			"value": "M"
+		}],
+		"status": true,
+		"subjects": [{
+				"text": "Html",
+				"value": "html"
+			},
+			{
+				"text": "CSS",
+				"value": "css"
+			},
+			{
+				"text": "Javascript",
+				"value": "javascript"
+			}
+		],
+		"class": [{
+			"text": "Class A",
+			"value": "class_a"
+		}],
+		"auto_increment_id": 1
+	},
+	{
+		"name": "May",
+		"date_of_birth": "1989-06-14",
+		"gender": [{
+			"text": "Female",
+			"value": "F"
+		}],
+		"status": false,
+		"subjects": [{
+			"text": "Html",
+			"value": "html"
+		}],
+		"class": [{
+			"text": "Class B",
+			"value": "class_b"
+		}],
+		"auto_increment_id": 2
+	},
+	{
+		"name": "David",
+		"date_of_birth": "1988-10-20",
+		"gender": [{
+			"text": "Male",
+			"value": "M"
+		}],
+		"status": true,
+		"subjects": [{
+				"text": "Html",
+				"value": "html"
+			},
+			{
+				"text": "CSS",
+				"value": "css"
+			},
+			{
+				"text": "Javascript",
+				"value": "javascript"
+			}
+		],
+		"class": [{
+			"text": "Class C",
+			"value": "class_c"
+		}],
+		"auto_increment_id": 3
+	}
+]
 ```
