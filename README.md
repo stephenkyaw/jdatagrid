@@ -11,9 +11,7 @@ javascript data grid entry library
 [![pages-build-deployment](https://github.com/kyawmyoaung-dev/jdatagrid/actions/workflows/pages/pages-build-deployment/badge.svg?branch=main)](https://github.com/kyawmyoaung-dev/jdatagrid/actions/workflows/pages/pages-build-deployment)
  
 :point_right: :link: [Demo Example](https://kyawmyoaung-dev.github.io/jdatagrid/) :grin:
- 
-
-
+  
 **html**
 ```
  <table id="jgrid" class="table table-bordered"></table>
@@ -38,6 +36,35 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
             );
         });
+ ```
+  **input_type**
+ ```
+ color
+ date
+ datetime-local
+ month
+ number
+ password
+ search
+ tel
+ text
+ time
+ url
+ week
+ range
+ url
+ select (return data object)
+ checkbox (return data object or boolean)
+ radio (return data object or boolean)
+
+ ```
+ **data object (array)**
+ ```
+ data : [{ text : 'text field', value : 'value field' }]
+ ```
+ **attributes (array)**
+ ```
+ attributes :[{ name : 'attribute_name', value : 'attribute_value' }]
  ```
  **get data**
 ```
