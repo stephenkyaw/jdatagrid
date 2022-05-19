@@ -421,9 +421,6 @@ function jgrid(options) {
             case 'time':
             case 'url':
             case 'week':
-            case 'file':
-            case 'hidden':
-            case 'image':
             case 'range':
             case 'url':
                 input = created_control_input(item);
