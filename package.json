@@ -1,0 +1,28 @@
+{
+  "name": "jdatagrid",
+  "version": "1.0.0",
+  "description": "javascript data grid entry library",
+  "main": "index.js",
+  "scripts": {
+    "build": "webpack"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kyawmyoaung-dev/jdatagrid.git"
+  },
+  "keywords": [
+    "jdatagrid",
+    "grid",
+    "table"
+  ],
+  "author": "kyawmyoaung",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/kyawmyoaung-dev/jdatagrid/issues"
+  },
+  "homepage": "https://github.com/kyawmyoaung-dev/jdatagrid#readme",
+  "devDependencies": {
+    "webpack": "^5.72.1",
+    "webpack-cli": "^4.9.2"
+  }
+}

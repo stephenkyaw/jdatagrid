@@ -1,9 +1,8 @@
-"use strict";
-function jdatagrid(options) {
+function jdatagrid(_options) {
 
     let default_options = { data: [], items: [], is_pagination: true, page_size: 5, current_page: 1 };
 
-    let { data, items, table, is_pagination, page_size, current_page } = { ...default_options, ...options };
+    let { data, items, table, is_pagination, page_size, current_page } = { ...default_options, ..._options };
 
     let table_instance = document.querySelector(table);
 
@@ -328,10 +327,10 @@ function jdatagrid(options) {
                     item[item_type.name].forEach(function (_data) {
                         value = value.concat(' ', _data.text);
                     });
-                }else{
+                } else {
                     value = item[item_type.name];
                 }
-              
+
             }
         } else if (typeof (item[item_type.name]) == 'boolean') {
 
