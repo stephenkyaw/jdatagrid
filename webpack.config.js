@@ -1,7 +1,7 @@
 const path = require('path');
 
 module.exports = {
-    mode: "production",
+    mode: "development",
     entry: './src/jdatagrid.js',
     output: {
         path: path.resolve(__dirname, 'public/js'),
@@ -9,8 +9,8 @@ module.exports = {
         libraryTarget: 'var',
         library: 'jdatagrid'
     },
-    // devtool: 'inline-source-map',
-    resolve:{
-        extensions: ['.ts','.js']
+    devtool: 'inline-source-map',
+    resolve: {
+        extensions: ['.ts', '.js']
     }
 }
