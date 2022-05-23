@@ -253,14 +253,12 @@ function jdatagrid(_options) {
                     event.preventDefault();   
                     let data_name = this.getAttribute('data-name');
                     let data_sort = this.getAttribute('data-sort');
-
                     if(data_sort == 'asc'){
                         data.sort((x,y) => ( x[`${data_name}`] > y[`${data_name}`] ? 1 : -1 ));
                         this.setAttribute('data-sort','desc');
                         render_table_rows();
                     }else{
                         data.sort((x,y) => ( x[`${data_name}`] > y[`${data_name}`] ? -1 : 1 ));
-                        data.sort((x,y) => (x.name > y.name ? -1 : 1 ));
                         this.setAttribute('data-sort','asc');
                         render_table_rows();
                     }
