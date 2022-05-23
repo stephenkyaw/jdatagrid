@@ -3,8 +3,8 @@ javascript data grid entry library
 
 **features**
  - crud operation :heavy_check_mark:
- - validation :x:
- - sorting :x:
+ - validation :heavy_check_mark:
+ - sorting :heavy_check_mark:
  - searching :x:
  - pagination :heavy_check_mark:
 
