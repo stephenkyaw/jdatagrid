@@ -1,12 +1,13 @@
+
 function jdatagrid(_options) {
 
-    let default_options = { data: [], items: [], is_pagination: true, page_size: 5, current_page: 1 };
+    let default_options = { data: [], item_list: [], is_pagination: true, page_size: 5, current_page: 1 };
 
-    let { data, items, table, is_pagination, page_size, current_page } = { ...default_options, ..._options };
+    let { data, item_list, table_name, is_pagination, page_size, current_page } = { ...default_options, ..._options };
 
-    let table_instance = document.querySelector(table);
+    let table_instance = document.querySelector(table_name);
 
-    this.get_data = { table, data, items };
+    this.get_data = { table_name, data, item_list };
 
     const init = () => {
         render_table_header();
@@ -16,7 +17,7 @@ function jdatagrid(_options) {
     /* custom function*/
     const defined_item = () => {
         let item_object = Object.create(Object.prototype);
-        items.forEach(function (item) {
+        item_list.forEach(function (item) {
             Object.defineProperty(item_object, item.name, {
                 value: null,
                 writable: true,
@@ -159,15 +160,41 @@ function jdatagrid(_options) {
         }
         return delete_button;
     }
-    const add_button_click_event = () => {
-        let item_object = defined_item();
-        items.forEach(function (item) {
+    const validation = () => {
+        let result = true;
+        item_list.forEach(function (item) {
             let input = table_instance.querySelector(`#${item.name}`);
-            item_object[item.name] = get_input_value(input, item);
+            let value = get_input_value(input, item);
+            if (item.is_require == true) {
+                if (value == '' || value == null || typeof (value) == 'undefined') {
+                    if (item.input_type == 'select' ||
+                        item.input_type == 'checkbox' ||
+                        item.input_type == 'radio') {
+                        let _require_message = typeof (item.require_message) != 'undefined' ? item.require_message : `require ${item.name}`;
+                        alert(_require_message);
+                        result = false;
+                    } else {
+                        input.className = "validation-error " + input.className;
+                        input.placeholder = item.require_message;
+                        result = false;
+                    }
+                }
+            }
         });
-        data.push(item_object);
-        render_table_rows();
-        clean_input_value();
+        return result;
+    }
+    const add_button_click_event = () => {
+              
+        if (validation()) {
+            let item_object = defined_item();
+            item_list.forEach(function (item) {
+                let input = table_instance.querySelector(`#${item.name}`);
+                item_object[item.name] = get_input_value(input, item);
+            });
+            data.push(item_object);
+            render_table_rows();
+            clean_input_value();
+        }
     }
     const edit_button_click_event = (table_edit_index, auto_increment_id) => {
         let edit_button = table_instance.querySelector(`#item_edit_button_${auto_increment_id}`);
@@ -177,7 +204,7 @@ function jdatagrid(_options) {
         if (edit_button.innerHTML == 'Edit') {
             edit_button.innerHTML = 'Update';
             delete_button.innerHTML = "Cancel";
-            items.forEach(function (item_type, _index) {
+            item_list.forEach(function (item_type, _index) {
                 let clone_controls = table_instance.querySelector(`#${item_type.name}`).cloneNode(true);
                 clone_controls.id = `${item_type.name}_${auto_increment_id}`;
                 clone_controls.name = `${item_type.name}_${auto_increment_id}`;
@@ -187,7 +214,7 @@ function jdatagrid(_options) {
             });
         }
         else if (edit_button.innerHTML == 'Update') {
-            items.forEach(function (item_type, _index) {
+            item_list.forEach(function (item_type, _index) {
                 let input = table_instance.querySelector(`#${item_type.name}_${auto_increment_id}`);
                 edit_item[item_type.name] = get_input_value(input, item_type);
             });
@@ -212,12 +239,36 @@ function jdatagrid(_options) {
         if (table_instance != null && table_instance != 'undefined') {
             let row = table_instance.insertRow(0);
             row.insertCell(0).innerHTML = "No.";
-            items.forEach(function (item, index) {
+            item_list.forEach(function (item, index) {
                 let cell = row.insertCell(index + 1);
-                cell.innerHTML = item.header_text;
+                //cell.innerHTML = item.header_text;
+
+                let _sort_link = document.createElement('a');
+                _sort_link.innerHTML = item.header_text;
+                _sort_link.href = '';
+                _sort_link.className = 'sort-link';
+                _sort_link.setAttribute('data-name',item.name);
+                _sort_link.setAttribute('data-sort','asc');
+                _sort_link.onclick = function(event){
+                    event.preventDefault();   
+                    let data_name = this.getAttribute('data-name');
+                    let data_sort = this.getAttribute('data-sort');
+
+                    if(data_sort == 'asc'){
+                        data.sort((x,y) => ( x[`${data_name}`] > y[`${data_name}`] ? 1 : -1 ));
+                        this.setAttribute('data-sort','desc');
+                        render_table_rows();
+                    }else{
+                        data.sort((x,y) => ( x[`${data_name}`] > y[`${data_name}`] ? -1 : 1 ));
+                        data.sort((x,y) => (x.name > y.name ? -1 : 1 ));
+                        this.setAttribute('data-sort','asc');
+                        render_table_rows();
+                    }
+                }
+                cell.appendChild(_sort_link);
             });
             //for add button cell
-            row.insertCell(items.length + 1);
+            row.insertCell(item_list.length + 1);
         }
     }
     const render_table_input_controls = () => {
@@ -225,13 +276,13 @@ function jdatagrid(_options) {
             let row = table_instance.insertRow(1);
             //for No. cell
             row.insertCell(0);
-            items.forEach(function (item, index) {
+            item_list.forEach(function (item, index) {
                 let cell = row.insertCell(index + 1);
                 let input = created_controls(item);
                 cell.appendChild(input);
             });
             //for add button cell
-            let add_btn_cell = row.insertCell(items.length + 1);
+            let add_btn_cell = row.insertCell(item_list.length + 1);
             add_btn_cell.appendChild(created_add_button());
         }
     }
@@ -263,10 +314,10 @@ function jdatagrid(_options) {
             _items.forEach(function (item, index) {
                 let row = table_instance.insertRow(index + 2);
                 row.insertCell(0).innerHTML = item.auto_increment_id;
-                items.forEach(function (item_type, _index) {
+                item_list.forEach(function (item_type, _index) {
                     row.insertCell(_index + 1).innerHTML = get_table_rows_render_value(item, item_type);
                 });
-                let edit_delete_cell = row.insertCell(items.length + 1);
+                let edit_delete_cell = row.insertCell(item_list.length + 1);
                 let table_row_index = parseInt(index) + 2;
                 edit_delete_cell.appendChild(created_edit_button(table_row_index, item.auto_increment_id));
                 edit_delete_cell.appendChild(created_delete_button(item.auto_increment_id));
@@ -452,9 +503,14 @@ function jdatagrid(_options) {
         return value;
     }
     const clean_input_value = () => {
-        if (typeof (items) != 'undefined' && items.length > 0 && items != null) {
-            items.forEach(function (item) {
+        if (typeof (item_list) != 'undefined' && item_list.length > 0 && item_list != null) {
+            item_list.forEach(function (item) {
                 let input = table_instance.querySelector(`#${item.name}`);
+
+                if(input.classList.contains("validation-error")){
+                    input.classList.remove("validation-error");
+                    input.removeAttribute("placeholder");
+                }
                 switch (input.getAttribute('type')) {
                     case 'color':
                     case 'date':
