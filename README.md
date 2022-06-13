@@ -18,24 +18,22 @@ javascript data grid entry library
 ```
  **javascript**
  ```
-document.addEventListener('DOMContentLoaded', function () {
-            jdatagrid = new jgrid(
+ grid = new jdatagrid(
                 {
-                    table: '#jgrid',
-                    items:
+                    table_name: '#jgrid',
+                    item_list:
                         [
-                            { name: 'name', input_type: 'text', header_text: 'Name', attributes: [{ name: 'class', value: 'form-control' }, { name: 'data-name', value: 'data-value' }] },
-                            { name: 'date_of_birth', input_type: 'date', header_text: 'Date of birth', attributes: [{ name: 'class', value: 'form-control' }] },
-                            { name: 'gender', input_type: 'radio', header_text: 'Gender', data: [{ text: 'Male', value: 'M' }, { text: 'Female', value: 'F' }] },
-                            { name: 'status', input_type: 'checkbox', header_text: 'Status' },
-                            { name: 'subjects', input_type: 'checkbox', header_text: 'Subjects', data: [{ text: 'Html', value: 'html' }, { text: 'CSS', value: 'css' }, { text: 'Javascript', value: 'javascript' }] },
-                            { name: 'class', input_type: 'select', header_text: 'Class', attributes: [{ name: 'class', value: 'form-control' }], data: [{ text: 'Class A', value: 'class_a' }, { text: 'Class B', value: 'class_b' }, { text: 'Class C', value: 'class_c' }] }
+                            { name: 'name', input_type: 'text', header_text: 'Name', is_require: false, require_message : 'please enter name', attributes: [{ name: 'class', value: 'form-control' }], is_sort : true },
+                            { name: 'date_of_birth', input_type: 'date', header_text: 'Date of birth',is_require: false,  attributes: [{ name: 'class', value: 'form-control' }] },
+                            { name: 'gender', input_type: 'radio', header_text: 'Gender',is_require: false, data: [{ text: 'Male', value: 'M' }, { text: 'Female', value: 'F' }] },
+                            { name: 'status', input_type: 'checkbox', header_text: 'Status' , is_require: false, require_message: 'please check the status!'},
+                            { name: 'subjects', input_type: 'checkbox', header_text: 'Subjects',  data: [{ text: 'Html', value: 'html' }, { text: 'CSS', value: 'css' }, { text: 'Javascript', value: 'javascript' }] },
+                            { name: 'class', input_type: 'select', header_text: 'Class',is_require: false,  attributes: [{ name: 'class', value: 'form-control' }], data: [{ text: 'Class A', value: 'class_a' }, { text: 'Class B', value: 'class_b' }, { text: 'Class C', value: 'class_c' }] }
                         ],
                     is_pagination: true,
-                    page_size: 10
+                    page_size: 3
                 }
             );
-        });
  ```
   **input_type**
  ```
