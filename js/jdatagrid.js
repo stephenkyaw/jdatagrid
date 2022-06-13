@@ -1,5 +1,6 @@
-
+"use strict";
 function jdatagrid(_options) {
+
 
     let default_options = { data: [], item_list: [], is_pagination: true, page_size: 5, current_page: 1 };
 
@@ -7,7 +8,7 @@ function jdatagrid(_options) {
 
     let table_instance = document.querySelector(table_name);
 
-    this.get_data = { table_name, data, item_list };
+    this.get_data = { table_instance: table_instance, data: data, table_name: table_name };
 
     const init = () => {
         render_table_header();
@@ -184,7 +185,7 @@ function jdatagrid(_options) {
         return result;
     }
     const add_button_click_event = () => {
-              
+
         if (validation()) {
             let item_object = defined_item();
             item_list.forEach(function (item) {
@@ -235,35 +236,46 @@ function jdatagrid(_options) {
     /* end add, edit, delete button & click event handler*/
 
     /* table render & pagination function*/
+    const sort_item = (item) => {
+        let _sort_link = document.createElement('a');
+        _sort_link.innerHTML = typeof (item.header_text) != 'undefined' ? item.header_text : item.name;
+        _sort_link.href = '';
+        _sort_link.className = 'sort-link';
+        _sort_link.setAttribute('data-name', item.name);
+        _sort_link.setAttribute('data-sort', 'asc');
+
+        if (typeof (item.data) != 'undefined' && item.data.length > 0) {
+            _sort_link.setAttribute('data-isarray', true);
+        }
+        _sort_link.onclick = function (event) {
+            event.preventDefault();
+            let data_name = this.getAttribute('data-name');
+            let data_sort = this.getAttribute('data-sort');
+            if (data_sort == 'asc') {
+                data.sort((x, y) => (x[`${data_name}`] > y[`${data_name}`] ? 1 : -1));
+                this.setAttribute('data-sort', 'desc');
+                render_table_rows();
+            } else {
+                data.sort((x, y) => (x[`${data_name}`] > y[`${data_name}`] ? -1 : 1));
+                this.setAttribute('data-sort', 'asc');
+                render_table_rows();
+            }
+
+        }
+        return _sort_link;
+    }
     const render_table_header = () => {
         if (table_instance != null && table_instance != 'undefined') {
             let row = table_instance.insertRow(0);
             row.insertCell(0).innerHTML = "No.";
             item_list.forEach(function (item, index) {
                 let cell = row.insertCell(index + 1);
-                //cell.innerHTML = item.header_text;
 
-                let _sort_link = document.createElement('a');
-                _sort_link.innerHTML = item.header_text;
-                _sort_link.href = '';
-                _sort_link.className = 'sort-link';
-                _sort_link.setAttribute('data-name',item.name);
-                _sort_link.setAttribute('data-sort','asc');
-                _sort_link.onclick = function(event){
-                    event.preventDefault();   
-                    let data_name = this.getAttribute('data-name');
-                    let data_sort = this.getAttribute('data-sort');
-                    if(data_sort == 'asc'){
-                        data.sort((x,y) => ( x[`${data_name}`] > y[`${data_name}`] ? 1 : -1 ));
-                        this.setAttribute('data-sort','desc');
-                        render_table_rows();
-                    }else{
-                        data.sort((x,y) => ( x[`${data_name}`] > y[`${data_name}`] ? -1 : 1 ));
-                        this.setAttribute('data-sort','asc');
-                        render_table_rows();
-                    }
+                if (typeof (item.is_sort) != 'undefined' && item.is_sort == true) {
+                    cell.appendChild(sort_item(item));
+                } else {
+                    cell.innerHTML = item.header_text;
                 }
-                cell.appendChild(_sort_link);
             });
             //for add button cell
             row.insertCell(item_list.length + 1);
@@ -505,7 +517,7 @@ function jdatagrid(_options) {
             item_list.forEach(function (item) {
                 let input = table_instance.querySelector(`#${item.name}`);
 
-                if(input.classList.contains("validation-error")){
+                if (input.classList.contains("validation-error")) {
                     input.classList.remove("validation-error");
                     input.removeAttribute("placeholder");
                 }

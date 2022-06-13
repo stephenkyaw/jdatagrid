@@ -55,7 +55,7 @@
             //     page_size: 3
             // });
 
-            grid = new jdatagrid(
+            grid =new jdatagrid(
                 {
                     table_name: '#jgrid',
                     item_list:
@@ -65,10 +65,10 @@
                             { name: 'gender', input_type: 'radio', header_text: 'Gender',is_require: false, data: [{ text: 'Male', value: 'M' }, { text: 'Female', value: 'F' }] },
                             { name: 'status', input_type: 'checkbox', header_text: 'Status' , is_require: false, require_message: 'please check the status!'},
                             { name: 'subjects', input_type: 'checkbox', header_text: 'Subjects',  data: [{ text: 'Html', value: 'html' }, { text: 'CSS', value: 'css' }, { text: 'Javascript', value: 'javascript' }] },
-                            { name: 'class', input_type: 'select', header_text: 'Class',is_require: false,  attributes: [{ name: 'class', value: 'form-control' }], data: [{ text: 'Class A', value: 'class_a' }, { text: 'Class B', value: 'class_b' }, { text: 'Class C', value: 'class_c' }] }
+                            { name: 'class', input_type: 'select', header_text: 'Class',is_require: false,  attributes: [{ name: 'class', value: 'form-control' }], data: [{ text: 'Class A', value: 'class_a' }, { text: 'Class B', value: 'class_b' }, { text: 'Class C', value: 'class_c' }] , is_sort : true }
                         ],
                     is_pagination: true,
-                    page_size: 3
+                    page_size: 10
                 }
             );
         });
