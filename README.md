@@ -10,7 +10,7 @@ javascript data grid entry library
 
 [![pages-build-deployment](https://github.com/kyawmyoaung-dev/jdatagrid/actions/workflows/pages/pages-build-deployment/badge.svg?branch=main)](https://github.com/kyawmyoaung-dev/jdatagrid/actions/workflows/pages/pages-build-deployment)
  
-:point_right: :link: [Demo Example](https://kyawmyoaung-dev.github.io/jdatagrid/) :grin:
+:point_right: :link: [Demo Example](https://stephenkyaw.github.io/jdatagrid/) :grin:
   
 **html**
 ```
